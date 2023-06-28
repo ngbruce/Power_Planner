@@ -1,7 +1,7 @@
 import subprocess
 
 list_plans = []
-fixed_plan_guid_name = "SCHEME_BALANCED"
+# fixed_plan_guid_name = "SCHEME_BALANCED"
 new_plan_guid=""
 dict_lid_option =  {
     0 : '不执行任何操作',
@@ -70,7 +70,10 @@ def select_pwr_plan():
     selected_index = None
     while selected_index is None:
         try:
-            selected_index = int(input("请选择一个方案的编号："))
+            input_str = input("--------------------\n选择一个方案编号 (输入为空则退出) ：")
+            if input_str.strip() == '':
+                return False
+            selected_index = int(input_str)
             if selected_index < 1 or selected_index > len(list_plans):
                 raise ValueError
         except ValueError:
@@ -80,17 +83,9 @@ def select_pwr_plan():
     selected_plan = list_plans[selected_index - 1]
     print(f"你选择的方案的 GUID 是：{selected_plan['guid']}")
     set_pwr_plans(selected_plan['guid'])
-
+    return True
 
 def set_lid(idx:int = 0, pwr:str="ac"):
-    global new_plan_guid
-    if new_plan_guid == "":
-        current_plan = "SCHEME_CURRENT"
-    else:
-        current_plan = new_plan_guid
-    # 实测要固定，上面的不起作用，要以平衡的id来设置
-    current_plan = fixed_plan_guid_name
-    # print(f"目前程序强制使用guid: {fixed_plan_guid_name}")
     command = "powercfg -set" + pwr + \
               "valueindex "+"SCHEME_CURRENT"+" 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 " + \
               str(idx)
