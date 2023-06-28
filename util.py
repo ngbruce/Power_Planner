@@ -1,5 +1,6 @@
 import subprocess
 
+list_plans = []
 fixed_plan_guid_name = "SCHEME_BALANCED"
 new_plan_guid=""
 dict_lid_option =  {
@@ -60,6 +61,7 @@ def set_pwr_plans(guid: str):
 
 # 提示用户选择和激活电源计划
 def select_pwr_plan():
+    global list_plans
     list_plans = get_pwr_plans()
     # 输出列表
     for i, plan in enumerate(list_plans, start=1):
@@ -88,16 +90,21 @@ def set_lid(idx:int = 0, pwr:str="ac"):
         current_plan = new_plan_guid
     # 实测要固定，上面的不起作用，要以平衡的id来设置
     current_plan = fixed_plan_guid_name
-    print(f"目前程序强制使用guid: {fixed_plan_guid_name}")
+    # print(f"目前程序强制使用guid: {fixed_plan_guid_name}")
     command = "powercfg -set" + pwr + \
-              "valueindex "+current_plan+" 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 " + \
+              "valueindex "+"SCHEME_CURRENT"+" 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 " + \
               str(idx)
-    # command = "powercfg -set"+pwr+ \
-    #           "valueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 "+\
-    #           str(idx)
-    # if __name__ == '__main__':
     print(f"命令为 {command}")
     subprocess.run(command, shell=True)
+    command = "powercfg -SetActive SCHEME_CURRENT"
+    subprocess.run(command, shell=True)
+    # for item in list_plans:
+    #     command = "powercfg -set" + pwr + \
+    #               "valueindex " + item['guid'] + \
+    #               " 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 " + \
+    #               str(idx)
+    #     print(f"命令为 {command}")
+    #     subprocess.run(command, shell=True)
 
 
 # 提示用户选择关闭盖子操作
