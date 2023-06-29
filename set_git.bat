@@ -23,7 +23,7 @@ echo - 9 - unset proxy
 echo ------------------------------
 echo - s - view global settings
 echo ------------------------------
-echo - 0 - 返回
+echo - 0 - 退出
 echo ------------------------------
 set "gitsel=x"
 set /p "gitsel=请选择操作: "
