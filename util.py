@@ -63,6 +63,7 @@ def set_pwr_plans(guid: str):
 def select_pwr_plan():
     global list_plans
     list_plans = get_pwr_plans()
+    print("选择电源计划\n--------------------")
     # 输出列表
     for i, plan in enumerate(list_plans, start=1):
         print(f"{i}. {plan['name']}  {'(活动)' if plan['active'] else ''}")
@@ -107,13 +108,17 @@ def select_lid():
     # 输出列表
     # for i, plan in enumerate(dict_lid_option, start=0):
     #     print(f"{i}. {plan}")2
+    print("--------------------\n选择关闭笔记本盖子的操作\n--------------------")
     for key in sorted(dict_lid_option):
         print(f"{key}: {dict_lid_option[key]}")
     # 选择方案
     selected_index = None
     while selected_index is None:
         try:
-            selected_index = int(input("请选择一个方案的编号："))
+            input_str = input("--------------------\n请选择一个方案的编号(输入为空则退出)：")
+            if input_str.strip() == '':
+                return 
+            selected_index = int(input_str)
             if selected_index < 0 or selected_index >= len(dict_lid_option):
                 raise ValueError
         except ValueError:
