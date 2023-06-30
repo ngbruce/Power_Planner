@@ -1,4 +1,5 @@
 import subprocess
+import re
 
 list_plans = []
 # fixed_plan_guid_name = "SCHEME_BALANCED"
@@ -33,18 +34,33 @@ def get_pwr_plans():
     output = output.splitlines()
     name = None
     for line in output:
-        # print(line)
+        # print("一行: ",line)
         if '电源方案' in line:
-            guid = line.split(':')[1].strip()
-            guid = guid.split('(')[0].strip()
-            name = line.split('(')[1].strip()
-            name = name.split(')')[0].strip()
-            active = line.split('(')[1].strip().split(')')[1].strip()
-            # print(f"guid={guid} , name={name}, star={active}")
-            element={'name': name, 'guid':guid,'active':True if active == '*' else  False}
-            if __name__ == '__main__':
-                print(element)
-            list_plans.append(element)
+            # guid = line.split(':')[1].strip()
+            # guid = guid.split('(')[0].strip()
+            # name = line.split('(')[1].strip()
+            # name = name.split(')')[0].strip()
+            # active = line.split('(')[1].strip().split(')')[1].strip()
+            # # print(f"guid={guid} , name={name}, star={active}")
+            # element={'name': name, 'guid':guid,'active':True if active == '*' else  False}
+            # if __name__ == '__main__':
+            #     print(element)
+            # list_plans.append(element)
+
+            # 使用正则表达式匹配符合要求的行
+            # match = re.match(r"电源方案 GUID:\s*(?P<guid>[a-f\d-]+)\s+\((?P<name>.*?)\)(?P<active>\s+\*)?", line)
+            match = re.match(r"电源方案 GUID:\s*(?P<guid>[a-f\d-]+)\s+\((?P<name>[^()]+(\([^\)]*\)[^()]*)*)\)(?P<active>\s+\*)?", line)
+            if match:
+                # 如果匹配成功，提取 GUID、名称和是否为推荐方案的信息
+                guid = match.group("guid")
+                name = match.group("name")
+                active = "*" if match.group("active") else ""
+                # 打印提取的信息
+                # print(f"GUID: {guid}, 名称: {name}{active}")
+                element={'name': name, 'guid':guid,'active':True if active == '*' else  False}
+                if __name__ == '__main__':
+                    print(element)
+                list_plans.append(element)
     return list_plans
 
 
@@ -66,7 +82,7 @@ def select_pwr_plan():
     print("选择电源计划\n--------------------")
     # 输出列表
     for i, plan in enumerate(list_plans, start=1):
-        print(f"{i}. {plan['name']}  {'(活动)' if plan['active'] else ''}")
+        print(f"{i}. {plan['name']}  {'*活动*' if plan['active'] else ''}")
     # 选择方案
     selected_index = None
     while selected_index is None:
