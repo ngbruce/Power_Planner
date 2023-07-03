@@ -1,0 +1,5 @@
+先使用 powercfg -l 列出电源计划的guid
+再用 powercfg /qh [guid] 列出某个计划里面全部隐藏设置项
+
+输出到文件：
+powercfg /qh > powerplan-settings.txt  
