@@ -1,4 +1,4 @@
-chcp 65001
+rem chcp 65001
 @echo off
 title git工具
 :start_git
